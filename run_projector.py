@@ -16,6 +16,9 @@ import pretrained_networks
 from training import dataset
 from training import misc
 
+import pickle 
+from datetime import datetime
+
 #----------------------------------------------------------------------------
 
 def project_image(proj, targets, png_prefix, num_snapshots):
@@ -28,6 +31,10 @@ def project_image(proj, targets, png_prefix, num_snapshots):
         if proj.get_cur_step() in snapshot_steps:
             misc.save_image_grid(proj.get_images(), png_prefix + 'step%04d.png' % proj.get_cur_step(), drange=[-1,1])
     print('\r%-30s\r' % '', end='', flush=True)
+
+    # ! Custom Change https://github.com/AmarSaini/Epoching_StyleGan2_Setup/blob/780c3eddd6513e20126aeac18027bb3a6be6d570/stylegan2/epoching_custom_run_projector.py#L36
+    with open(png_prefix + 'final_latent_code.pkl', 'wb') as out_file:
+        pickle.dump(proj.get_dlatents(), out_file)
 
 #----------------------------------------------------------------------------
 

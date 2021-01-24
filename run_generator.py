@@ -49,9 +49,12 @@ def style_mixing_example(network_pkl, row_seeds, col_seeds, truncation_psi, col_
 
     print('Generating W vectors...')
     all_seeds = list(set(row_seeds + col_seeds))
+    # @all_z is random numbers
     all_z = np.stack([np.random.RandomState(seed).randn(*Gs.input_shape[1:]) for seed in all_seeds]) # [minibatch, component]
     all_w = Gs.components.mapping.run(all_z, None) # [minibatch, layer, component]
+    # @all_w is also random numbers
     all_w = w_avg + (all_w - w_avg) * truncation_psi # [minibatch, layer, component]
+    # @all_w now will not be too far from @w_avg
     w_dict = {seed: w for seed, w in zip(all_seeds, list(all_w))} # [layer, component]
 
     print('Generating images...')
